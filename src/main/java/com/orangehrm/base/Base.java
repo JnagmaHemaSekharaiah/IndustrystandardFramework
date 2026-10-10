@@ -10,58 +10,76 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 import org.testng.annotations.*;;
 
-public class Base
-{
-   protected Properties prop;
-   protected WebDriver  driver;
+public class Base {
+
+    protected static Properties prop;
+    protected static WebDriver driver;
+
+    @BeforeSuite
+    public void loadConfig() {
+        prop = new Properties();
+        try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
+            prop.load(fis);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void launchBroswer() {
+        String browser = prop.getProperty("browser").trim();
+        if (browser.equalsIgnoreCase("chrome")) {
+            driver = new ChromeDriver();
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            driver = new FirefoxDriver();
+        } else {
+            throw new IllegalArgumentException("Browser not supported.." + browser);
+        }
+    }
+
+    private void configBroswer() {
+        //Implicit Wait
+        int implicitWait = Integer.parseInt(prop.getProperty("implicitwait"));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+
+        //maximize window
+        driver.manage().window().maximize();
+
+        //Navigate to URL
+        try {
+            driver.get(prop.getProperty("url"));
+        } catch (Exception e) {
+            System.out.println("Failed to navigate the URL " + e.getMessage());
+        }
+    }
+
+    @BeforeMethod
+    public void setUp() throws IOException {
+        System.out.println("Setting up WebDriver for:" + this.getClass().getSimpleName());
+        launchBroswer();
+        configBroswer();
+        staticWait(2);
+    }
 
 
-   @BeforeMethod
-   public void setUp() throws IOException
-   {
-     // Load Configuration
-     prop = new Properties();
-     try (FileInputStream fis = new FileInputStream("src/main/resources/config.properties")) {
-         prop.load(fis);
-     }
+    @AfterMethod
+    public void tearDown() {
+        if (driver != null) {
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                System.out.println("unable to quit the driver" + e.getMessage());
+            }
+        }
+    }
 
-     //Initialize the browser
-     String browser = prop.getProperty("browser").trim();
-      if (browser.equalsIgnoreCase("chrome")) {
-          driver= new ChromeDriver();
-      }
-      else if (browser.equalsIgnoreCase("firefox")) {
-          driver= new FirefoxDriver();
-      }
-      else {
-          throw new IllegalArgumentException("Browser not supported.."+browser);
-      }
-
-      //Implicit Wait
-      int implicitWait = Integer.parseInt(prop.getProperty("implicitwait"));
-      driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
-
-      //maximize window
-      driver.manage().window().maximize();
-
-      //Navigate to URL
-       driver.get(prop.getProperty("url"));
-
-   }
-
-
-   @AfterMethod
-   public void tearDown()
-   {
-       if (driver!=null)
-       {
-           driver.quit();
-       }
-   }
-
+    public void staticWait(int seconds) {
+        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
+    }
 
 
 }
