@@ -81,5 +81,18 @@ public class Base {
         LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
     }
 
+    public void setDriver(WebDriver driver) {
+        this.driver =driver;
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+   public static Properties getProp() {
+       return prop;
+   }
+
+
 
 }
