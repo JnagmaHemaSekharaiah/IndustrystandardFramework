@@ -10,21 +10,20 @@ public class LoginPage {
     private ActionDriver actionDriver;
 
     //Define locators
-    private By userNameFiled= By.name("username");
-    private By passwordFiled =By.name("password");
-    private By loginButton = By.xpath("//button[@type='submit']");
-    private By errorMesg = By.xpath("//*[text()='Invalid credentials']");
+    private By userNameFiled = By.name("username");
+    private By passwordFiled = By.name("password");
+    private By loginButton   = By.xpath("//button[@type='submit']");
+    private By errorMesg     = By.xpath("//*[text()='Invalid credentials']");
 
 
-    LoginPage(WebDriver driver)
-    {
+    public LoginPage(WebDriver driver) {
         this.actionDriver = new ActionDriver(driver);
     }
 
 
     public void login(String userName,String password){
-     actionDriver.enterText(userNameFiled,"admin");
-     actionDriver.enterText(passwordFiled,"admin123");
+     actionDriver.enterText(userNameFiled,userName);
+     actionDriver.enterText(passwordFiled,password);
      actionDriver.click(loginButton);
     }
 
@@ -32,15 +31,14 @@ public class LoginPage {
         actionDriver.isDisplayed(errorMesg);
     }
 
-    public String getErrorMesgText(){
+    public String getErrorMessageText(){
      return actionDriver.getText(errorMesg);
     }
 
 
-    public void verifyErrorMeg(String expectedError){
-    actionDriver.compareText(errorMesg,expectedError);
+    public boolean verifyErrorMessage(String expectedError){
+    return actionDriver.compareText(errorMesg,expectedError);
     }
-
 
 
 
