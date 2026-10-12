@@ -1,6 +1,7 @@
 package com.orangehrm.pages;
 
 import com.orangehrm.actionDriver.ActionDriver;
+import com.orangehrm.base.Base;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -16,8 +17,8 @@ public class LoginPage {
     private By errorMesg     = By.xpath("//*[text()='Invalid credentials']");
 
 
-    public LoginPage(WebDriver driver) {
-        this.actionDriver = new ActionDriver(driver);
+    public LoginPage() {
+        this.actionDriver = Base.getActionDriver();
     }
 
 

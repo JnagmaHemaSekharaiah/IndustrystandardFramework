@@ -1,5 +1,6 @@
 package com.orangehrm.base;
 
+import com.orangehrm.actionDriver.ActionDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -19,6 +20,7 @@ public class Base {
 
     protected static Properties prop;
     protected static WebDriver driver;
+    private static ActionDriver actionDriver;
 
     @BeforeSuite
     public void loadConfig() {
@@ -63,6 +65,12 @@ public class Base {
         launchBroswer();
         configBroswer();
         staticWait(2);
+
+        if (actionDriver == null) {
+        actionDriver = new ActionDriver(driver);
+        System.out.println("Action driver instance created...");
+        }
+
     }
 
 
@@ -75,19 +83,33 @@ public class Base {
                 System.out.println("unable to quit the driver" + e.getMessage());
             }
         }
+        System.out.println("WebDriver instance is closed");
+        driver=null;
+        actionDriver=null;
     }
 
     public void staticWait(int seconds) {
         LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
     }
 
-    public void setDriver(WebDriver driver) {
-        this.driver =driver;
-    }
 
-    public WebDriver getDriver() {
+    public static WebDriver getDriver() {
+        if (driver==null) {
+            System.out.println("Web Driver is not instanllized");
+         throw new IllegalStateException("Web Driver not installized");
+        }
         return driver;
     }
+
+    public static ActionDriver getActionDriver() {
+        if (actionDriver==null) {
+            System.out.println("ActionDriver is not instanllized");
+            throw new IllegalStateException("Action Driver not installized");
+        }
+        return actionDriver;
+    }
+
+
 
    public static Properties getProp() {
        return prop;

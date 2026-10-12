@@ -15,13 +15,14 @@ public class HomePageTest extends Base {
 
     @BeforeMethod
     public void setupPages(){
-        this.loginPage = new LoginPage(getDriver());
-        this.homePage = new HomePage(getDriver());
+        this.loginPage = new LoginPage();
+        this.homePage = new HomePage();
     }
 
     @Test
     public void verifyOrangeHRMLogo(){
         loginPage.login("admin","admin123");
+        staticWait(2);
         Assert.assertTrue(homePage.verifyOrgangeHRMLogo(),"Logo is not visible");
     }
 

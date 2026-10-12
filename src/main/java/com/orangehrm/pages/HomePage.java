@@ -1,6 +1,7 @@
 package com.orangehrm.pages;
 
 import com.orangehrm.actionDriver.ActionDriver;
+import com.orangehrm.base.Base;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -15,8 +16,8 @@ public class HomePage {
     private By orangehrmLogo =  By.xpath("//div[@class='oxd-brand-banner']");
 
 
-    public HomePage(WebDriver driver) {
-        this.actionDriver= new ActionDriver(driver);
+    public HomePage() {
+        this.actionDriver= Base.getActionDriver();
     }
 
     public boolean isAdminTabDisplayed(){

@@ -17,6 +17,7 @@ public class ActionDriver
   private WebDriver driver;
   private WebDriverWait wait;
 
+
   public ActionDriver(WebDriver  driver)
   {
       this.driver=driver;
@@ -41,7 +42,6 @@ public class ActionDriver
           System.out.println("element is not visible: "+e.getMessage());
       }
   }
-
 
   public void click(By by)
   {
@@ -76,7 +76,6 @@ public class ActionDriver
           return "";
       }
   }
-
 
   public boolean compareText(By by,String expectedText) {
       String actualText ="";
@@ -119,6 +118,7 @@ public class ActionDriver
           System.out.println("Unable to locate element: "+e.getMessage());
       }
   }
+
 
 
 }
